@@ -1,6 +1,7 @@
-API de acesso aos dados do [Vagalume](http://www.vagalume.com.br/)
+API [Vagalume](http://www.vagalume.com.br/)
 ===
+Fork this project to add more features and examples.
 
-Para mais informações sobre a API acesse:
+More information about the API you can find (in portuguese) at:
 ---
   - [Vagalume API](http://www.vagalume.com.br/api/)
