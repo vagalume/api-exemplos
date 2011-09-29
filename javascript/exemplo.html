@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <HTML>
 <head>
-	<title>Vagalume API Example - jQuery JSONP</title>
+	<title>Vagalume API Example</title>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
 </head>
 <style>
@@ -11,7 +11,7 @@
 <BODY>
 	<h1>Lyrics API example</h1>
 	<div style='width:500px'>
-		<p>This example is using JSONP to fetch <a href='http://www.vagalume.com.br/api/docs/letras/'>lyrics from Vagalume</a>. It's a very complete example 
+		<p>This example is using <a href='http://api.jquery.com/jQuery.getJSON/'>getJSON</a> to fetch <a href='http://www.vagalume.com.br/api/docs/letras/'>lyrics from Vagalume</a>. It's a very complete example 
 		using jQuery, but you can make any change you want to match your needs. It's important to keep Vagalume logo and link on your webpage.</p>
 		<p>Artist and Song name are static on this page, which you could generate from your favourite programming language or even change this code
 		to fech this data somewhere else.</p>
@@ -23,11 +23,11 @@
 		</span>
 
 		<!--- Where lyrics should be placed. Don't remove Vagalume logo and link. -->
-		<a target=_blank style='float:right;font-size:10px;color:#000;text-decoration:none;font-weight:bold' href="http://www.vagalume.com.br/"><img src="http://www.vagalume.com.br/images/logo_small2.jpg" alt="Vagalume"><br/>Letras de Músicas</a>
+		<a target=_blank style='float:right;font-size:10px;color:#000;text-decoration:none;font-weight:bold' href="http://www.vagalume.com.br/"><img border=0 src="http://www.vagalume.com.br/images/logo_small2.jpg" alt="Vagalume"><br/>Letras de Músicas</a>
 		<div id='letra' style='width:400px;text-align:left'>
 			<pre class=text>Fetching lyrics... <img src="http://www.vagalume.com.br/images/processing.gif"></pre>
 		</div>
-		<a target=_blank id=vagalumeBrandBottom href="http://www.vagalume.com.br/search.php?t=art&q=U2">More about U2 at Vagalume &raquo;</a>
+		<a target=_blank id=vagalumeBrandBottom href="http://www.vagalume.com.br/search.php?t=art&q=Madonna">More about Madonna at Vagalume &raquo;</a>
 	</div>
 	<script>
 		/* EXAMPLE CODE USING VAGALUME API (Lyrics)
@@ -58,23 +58,23 @@
 		IN THE SOFTWARE.
 		*/
 
-		function showLetra (data,artist,song,arrayid) {
+		function showLetra (data,art,mus,arrayid) {
 			if (! arrayid) arrayid = 0;
 
 			if (data.type == 'exact' || data.type == 'aprox') {
 				// Print lyrics text
-				$('#letra pre.text').text(data.mus[arrayid].text);
+				$('#letra .text').text(data.mus[arrayid].text);
 
 				// Show buttons to open original and portuguese translation
 				if (data.mus[arrayid].translate) {
-					$('#letra pre.text').prepend('<input type=button value="Portuguese &raquo;" onClick="$(document).trigger(\'translate\')"><br/>');
+					$('#letra .text').prepend('<input type=button value="Portuguese &raquo;" onClick="$(document).trigger(\'translate\')"><br/>');
 					$(document).one('translate',function() {
-											$('#letra pre.text').text(data.mus[arrayid].translate[0].text);
-											$('#letra pre.text').prepend('<input type=button value="&laquo; Original" onClick="$(document).trigger(\'original\')"><br/>');
-											$(document).one('original',function() {
-												showLetra(data,artist,song,arrayid);
-											});
-										 });
+						$('#letra .text').text(data.mus[arrayid].translate[0].text);
+						$('#letra .text').prepend('<input type=button value="&laquo; Original" onClick="$(document).trigger(\'original\')"><br/>');
+						$(document).one('original',function() {
+							showLetra(data,art,mus,arrayid);
+						});
+					});
 				}
 
 				// If not exact match (ex: U2 / Beautiful)
@@ -90,43 +90,61 @@
 						html += '</select>';
 						$('#aprox span.songname').html(html);
 						$('#aprox select.songselect').change(function() {
-											var aID = $('option:selected',this).val();
-											showLetra (data,artist,song,aID);
-										});
+							var aID = $('option:selected',this).val();
+							showLetra (data,art,mus,aID);
+						});
 					}
 				}
 			} else if (data.type == 'song_notfound') {
 				// Song not found, but artist was found
 				// You can list all songs from Vagalume here
-				$('#letra pre.text').html('Song "'+song+'" from "'+artist+'" was not found.<br/><a target=_blank href="http://www.vagalume.com.br/addmusic.php">Add this song to Vagalume &raquo;</a>');
+				$('#letra .text').html(
+					'Song "'+mus+'" from "'+art+'" was not found.<br/>'
+					+'<a target=_blank href="http://www.vagalume.com.br/addmusic.php">'
+					+'Add this song to Vagalume &raquo;</a>'
+				);
 			} else {
 				// Artist not found
-				$('#letra pre.text').html('Song "'+song+'" from "'+artist+'" was not found<br/>(artist not found)<br/><a target=_blank href="http://www.vagalume.com.br/addmusic.php">Add this song to Vagalume &raquo;</a>');
+				$('#letra .text').html(
+					'Song "'+mus+'" from "'+art+'" was not found<br/>'
+					+'(artist not found)<br/>'
+					+'<a target=_blank href="http://www.vagalume.com.br/addmusic.php">'
+					+'Add this song to Vagalume &raquo;</a>'
+				);
 			}
 		}
-		function fetchLetra (artist,song,serial,udig) {
-			var data = jQuery.data(document,artist + song); // cache read
+		function fetchLetra (art,mus,serial,udig) {
+			var data = jQuery.data(document,art + mus); // cache read
 			if (data && !data.captcha) {
-				showLetra(data, artist, song);
+				showLetra(data, art, mus);
 				return true;
 			}
 
-			var url = "http://www.vagalume.com.br/api/search.php?artist="+encodeURIComponent(artist)+"&song="+encodeURIComponent(song);
+			var url = "http://www.vagalume.com.br/api/search.php"
+				+"?art="+encodeURIComponent(art)
+				+"&mus="+encodeURIComponent(mus);
+
+			// Check if browser support CORS - http://www.w3.org/TR/cors/
+			// If it does, it's better for caching and avoids captcha.
+			if (!jQuery.support.cors) {
+				url += "&callback=?";
+			}
+
 			if (serial && udig) url += "&serial="+encodeURIComponent(serial)+"&udig="+encodeURIComponent(udig);
 
-			jQuery.getJSON(url + "&callback=?",function(data) {
+			jQuery.getJSON(url,function(data) {
 				// In case we reach the rate limit, we must ask user to type the captcha
 				if (data.captcha) {
 					var html = '<div id=captcha>Type the 4 numbers bellow<br/>to load this lyrics:<br/>';
 					    html +='<img src="'+data.captcha_img+'"><br/>';
 					    html +='<input type=text id=udig size=4 maxlength=4>';
 					    html +='<input type=button onClick="$(document).trigger(\'refetch\')" value="Continue &raquo;"></div>';
-					$(document).one("refetch",function() { fetchLetra(artist,song,data.serial,document.getElementById("udig").value); });
-					$('#letra pre.text').html(html);
+					$(document).one("refetch",function() { fetchLetra(art,mus,data.serial,document.getElementById("udig").value); });
+					$('#letra .text').html(html);
 				} else {
 					// What we do with the data
-					jQuery.data(document,artist + song,data); // cache write
-					showLetra(data, artist, song);
+					jQuery.data(document,art + mus,data); // cache write
+					showLetra(data, art, mus);
 				}
 			});
 		}
