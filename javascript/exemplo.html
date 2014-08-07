@@ -2,16 +2,15 @@
 <HTML>
 <head>
 	<title>Vagalume API Example</title>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 <style>
 	#aprox {color:black;font-weight:bold;padding:10px 0}
-	#captcha{padding:10px}
 </style>
 <BODY>
 	<h1>Lyrics API example</h1>
 	<div style='width:500px'>
-		<p>This example is using <a href='http://api.jquery.com/jQuery.getJSON/'>getJSON</a> to fetch <a href='http://www.vagalume.com.br/api/docs/letras/'>lyrics from Vagalume</a>. It's a very complete example 
+		<p>This example is using <a href='http://api.jquery.com/jQuery.getJSON/'>getJSON</a> to fetch <a href='http://api.vagalume.com.br/docs/letras/'>lyrics from Vagalume</a>. It's a very complete example 
 		using jQuery, but you can make any change you want to match your needs. It's important to keep Vagalume logo and link on your webpage.</p>
 		<p>Artist and Song name are static on this page, which you could generate from your favourite programming language or even change this code
 		to fech this data somewhere else.</p>
@@ -23,7 +22,7 @@
 		</span>
 
 		<!--- Where lyrics should be placed. Don't remove Vagalume logo and link. -->
-		<a target=_blank style='float:right;font-size:10px;color:#000;text-decoration:none;font-weight:bold' href="http://www.vagalume.com.br/"><img border=0 src="http://www.vagalume.com.br/images/logo_small2.jpg" alt="Vagalume"><br/>Letras de Músicas</a>
+		<a target=_blank style='float:right;font-size:10px;color:#000;text-decoration:none;font-weight:bold' href="http://www.vagalume.com.br/"><img border=0 src="http://www.vagalume.com.br/images/logo_small2.jpg" alt="Vagalume"><br/>Letras de MÃºsicas</a>
 		<div id='letra' style='width:400px;text-align:left'>
 			<pre class=text>Fetching lyrics... <img src="http://www.vagalume.com.br/images/processing.gif"></pre>
 		</div>
@@ -33,7 +32,7 @@
 		/* EXAMPLE CODE USING VAGALUME API (Lyrics)
 
 		You can make any modifications to this code.
-		Please read API Terms at www.vagalume.com.br/api/terms/
+		Please read API Terms at api.vagalume.com.br/terms/
 
 		IMPORTANT: VAGALUME LOGO AND LINK MUST BE PRESENT ON THE PAGE
 
@@ -100,7 +99,7 @@
 				// You can list all songs from Vagalume here
 				$('#letra .text').html(
 					'Song "'+mus+'" from "'+art+'" was not found.<br/>'
-					+'<a target=_blank href="http://www.vagalume.com.br/addmusic.php">'
+					+'<a target=_blank href="http://www.vagalume.com.br/add/lyrics.php">'
 					+'Add this song to Vagalume &raquo;</a>'
 				);
 			} else {
@@ -108,49 +107,36 @@
 				$('#letra .text').html(
 					'Song "'+mus+'" from "'+art+'" was not found<br/>'
 					+'(artist not found)<br/>'
-					+'<a target=_blank href="http://www.vagalume.com.br/addmusic.php">'
+					+'<a target=_blank href="http://www.vagalume.com.br/add/lyrics.php">'
 					+'Add this song to Vagalume &raquo;</a>'
 				);
 			}
 		}
-		function fetchLetra (art,mus,serial,udig) {
+		function fetchLetra (art,mus) {
 			var data = jQuery.data(document,art + mus); // cache read
-			if (data && !data.captcha) {
+			if (data) {
 				showLetra(data, art, mus);
 				return true;
 			}
 
-			var url = "http://www.vagalume.com.br/api/search.php"
+			var url = "http://api.vagalume.com.br/search.php"
 				+"?art="+encodeURIComponent(art)
 				+"&mus="+encodeURIComponent(mus);
 
-			// Check if browser support CORS - http://www.w3.org/TR/cors/
-			// If it does, it's better for caching and avoids captcha.
+			// Check if browser supports CORS - http://www.w3.org/TR/cors/
 			if (!jQuery.support.cors) {
 				url += "&callback=?";
 			}
 
-			if (serial && udig) url += "&serial="+encodeURIComponent(serial)+"&udig="+encodeURIComponent(udig);
-
 			jQuery.getJSON(url,function(data) {
-				// In case we reach the rate limit, we must ask user to type the captcha
-				if (data.captcha) {
-					var html = '<div id=captcha>Type the 4 numbers bellow<br/>to load this lyrics:<br/>';
-					    html +='<img src="'+data.captcha_img+'"><br/>';
-					    html +='<input type=text id=udig size=4 maxlength=4>';
-					    html +='<input type=button onClick="$(document).trigger(\'refetch\')" value="Continue &raquo;"></div>';
-					$(document).one("refetch",function() { fetchLetra(art,mus,data.serial,document.getElementById("udig").value); });
-					$('#letra .text').html(html);
-				} else {
-					// What we do with the data
-					jQuery.data(document,art + mus,data); // cache write
-					showLetra(data, art, mus);
-				}
+				// What we do with the data
+				jQuery.data(document,art + mus,data); // cache write
+				showLetra(data, art, mus);
 			});
 		}
 
 		// Just an example of how you can call this using elements on the page
-		fetchLetra($("#artista").html(),$("#music").html());
+		fetchLetra($("#artista").text(),$("#music").text());
 	</script>
 </BODY>
 </HTML>
