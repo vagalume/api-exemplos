@@ -5,4 +5,4 @@ Vagalume API (Lyrics and Music info)
 This Github repo was created to organize examples of code to access Vagalume API. If you want to contribute to this project, please fork it and make pull requests.
 More information about the API you can find (in portuguese) at [Vagalume API webpage](http://api.vagalume.com.br/).
 
-A [access key](https://auth.vagalume.com.br/settings/api/) is required to use Vagalume API.
+In order to use this API, you need to apply for an application credential (app key). This new requirement will be mandatory after Nov 23rd 2015.
