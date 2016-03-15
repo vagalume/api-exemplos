@@ -14,6 +14,7 @@ O uso da API é totalmente gratuito, mas é muito importante que o logo e link p
 * NodeJS: https://github.com/gpedro/node-vagalume
 * Ruby: https://github.com/brianstorti/vagalume
 * javascript / jQuery https://gist.github.com/lenivene/afb11929910b2dc8cb02
+* Python https://github.com/diegoteixeir4/python-vagalume
 
 *Colabore criando códigos de exemplo!*
 
