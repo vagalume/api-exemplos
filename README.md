@@ -1,5 +1,8 @@
 Vagalume API (Exemplos)
 ===
+
+**AVISO: API deverá ser descontinuada muito em breve. Infelizmente, muitas pessoas utilizam a API e não colocam os devidos créditos da origem dos dados. Assim, acaba não valendo a pena manter o serviço (que sempre foi gratuito).**
+
 [Vagalume](http://www.vagalume.com.br/) é um dos maiores sites de música do Brasil. Atualizado diariamente, é um dos principais recursos de informações de artistas e letras de músicas.
 
 Este repositório agrega alguns exemplos de implementação de acesso em algumas linguagens.
